@@ -1,14 +1,20 @@
 const express = require('express');
-const DB = require('./DB/db');
+const sequelize = require('./DB/db');
 const api = require('./routes/api');
 const morgan = require('morgan');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
-DB.connect((err) => {
-    if (err) throw err;
-    console.log("connected to mysql");
-})
+(async () => {
+    try {
+        await sequelize.authenticate();
+        await sequelize.sync({alter: true});
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+})()
 
 app.use(cors());
 app.use(express.json());
