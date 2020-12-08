@@ -1,6 +1,8 @@
 const express = require('express');
 const sequelize = require('./DB/db');
-const api = require('./routes/api');
+const role = require('./routes/role');
+const employee = require('./routes/employee');
+const department = require('./routes/department');
 const morgan = require('morgan');
 const cors = require('cors');
 require('dotenv').config();
@@ -20,7 +22,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
-app.use('/api', api);
+app.use('/api/employee', employee);
+app.use('/api/role', role);
+app.use('/api/department', department);
 
 const port = process.env.PORT || 3000;
 

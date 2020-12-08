@@ -1,4 +1,5 @@
 const {DataTypes} = require('sequelize');
+const Role = require('./Role');
 const sequelize = require('./db');
 
 const Employee = sequelize.define('employee', {
@@ -18,12 +19,14 @@ const Employee = sequelize.define('employee', {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-            model: 'roles',
+            model: Role,
             key: 'ID'
         }
     }
 }, {
     timestamps: false
 });
+
+Employee.belongsTo(Role, {foreignKey: 'role_id', targetKey: 'ID'});
 
 module.exports = Employee;

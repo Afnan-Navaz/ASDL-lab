@@ -1,4 +1,5 @@
 const {DataTypes} = require('sequelize');
+const Department = require('./Depatrment');
 const sequelize = require('./db');
 
 const Role = sequelize.define('role', {
@@ -25,5 +26,7 @@ const Role = sequelize.define('role', {
 }, {
     timestamps: false
 });
+
+Role.belongsTo(Department, {foreignKey: 'department_id', targetKey: 'ID'});
 
 module.exports = Role;
