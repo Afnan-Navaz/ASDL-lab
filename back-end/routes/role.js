@@ -1,10 +1,15 @@
 const express = require('express');
 const Role = require('../DB/Role');
+const Department = require('../DB/Depatrment');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
     try{
-        const role = await Role.findAll();
+        const role = await Role.findAll({
+            include: {
+                model: Department,
+            }
+        });
         res.send(role);
     }catch(e){
         res.status(400).send(e);

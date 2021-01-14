@@ -2,6 +2,7 @@ const express = require('express');
 const Employee = require('../DB/Employee');
 const Role = require('../DB/Role');
 const Department = require('../DB/Depatrment');
+const {Op} = require('sequelize');
 const router = express.Router();
 
 router.get('/', async (_req, res) => {
@@ -20,12 +21,30 @@ router.get('/', async (_req, res) => {
     }
 });
 
+router.get('/id/:id', async (req, res) => {
+    try{
+        const employees = await Employee.findOne({
+            include: {
+                model: Role,
+                include: {
+                    model: Department
+                }
+            },
+            where: {
+                ID: req.params.id,
+            },
+        });
+        res.send(employees);
+    }catch(e){
+        res.status(400).send(e);
+    }
+});
+
 router.post('/add', async (req, res) => {
     const {
         first_name,
         last_name,
         role_id,
-        manager_id
     } = req.body;
     try{
         const employee = await Employee.create({
@@ -41,7 +60,8 @@ router.post('/add', async (req, res) => {
 
 router.get('/filter', async (req, res) => {
     const {
-        roleid
+        roleid,
+        firstname
     } = req.query;
 
     try{
@@ -53,7 +73,14 @@ router.get('/filter', async (req, res) => {
                 }
             },
             where: {
-                role_id: roleid
+                [Op.and]: [
+                    {role_id: roleid ? roleid : {
+                        [Op.not]: null
+                    }},
+                    {first_name: {
+                        [Op.iRegexp]: firstname ? `^${firstname}` : '^.*'
+                    }}
+                ]
             }
         });
         res.send(employees);
@@ -70,10 +97,33 @@ router.delete('/delete/:id', async (req, res) => {
                 ID: id
             }
         })
-        res.send("deleted");
+        res.send({ message: 'delete' });
     }catch(e){
         res.status(400).send(e);
     }
 })
+
+router.put('/edit', async (req, res) => {
+    const {
+        first_name,
+        last_name,
+        role_id,
+        id,
+    } = req.body;
+    try{
+        const employee = await Employee.update({
+            first_name,
+            last_name,
+            role_id
+        }, {
+            where: {
+                ID: id
+            }
+        });
+        res.send(employee);
+    }catch(e){
+        res.status(400).send(e);
+    }
+});
 
 module.exports = router;

@@ -26,6 +26,6 @@ app.use('/api/employee', employee);
 app.use('/api/role', role);
 app.use('/api/department', department);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 app.listen(port, () => {console.log(`listening on PORT:${port}`)});
