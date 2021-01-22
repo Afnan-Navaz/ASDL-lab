@@ -1,6 +1,7 @@
-const root = (window.location.hostname === "localhost") ? 
-            "http://localhost:4000/api" : 
-            "https://asdllab.herokuapp.com/api";
+// const root = (window.location.hostname === "localhost") ? 
+//             "http://localhost:4000/api" : 
+//             "https://asdllab.herokuapp.com/api";
+const root = "https://asdllab.herokuapp.com/api";
 
 export const getDepartment = async () => {
     const res = await fetch(`${root}/department`);
